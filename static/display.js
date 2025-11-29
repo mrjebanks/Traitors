@@ -39,22 +39,37 @@ function revealName(name) {
   lastName = name;
 }
 
-function playGlitch(message, after) {
+function playGlitch(message, after, opts = {}) {
+  const { duration = 2000, alert = false } = opts;
   glitchText.textContent = message;
   glitchOverlay.classList.add("active");
   scanLines.classList.add("active");
+  if (alert) {
+    glitchOverlay.classList.add("alert");
+    scanLines.classList.add("alert");
+    glitchText.classList.add("alert");
+  }
   glitchText.classList.add("active");
   setTimeout(() => {
     glitchOverlay.classList.remove("active");
     scanLines.classList.remove("active");
+    glitchOverlay.classList.remove("alert");
+    scanLines.classList.remove("alert");
+    glitchText.classList.remove("alert");
     glitchText.classList.remove("active");
     if (after) after();
-  }, 2000);
+  }, duration);
 }
 
 function handleClaim(name) {
   if (lastName === name) return;
-  playGlitch("COMMUNICATION INTERRUPTED", () => revealName(name));
+  playGlitch("COMMUNICATION INTERRUPTED", () => {
+    playGlitch(
+      "TRAITORS TRAP ACTIVATED - LOCATION BROWNEDGE MAIN HALL",
+      () => revealName(name),
+      { alert: true, duration: 2200 }
+    );
+  }, { duration: 1800 });
 }
 
 function handleReset() {
