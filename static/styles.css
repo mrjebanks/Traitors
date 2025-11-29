@@ -452,21 +452,21 @@ input[type="text"]:focus {
 }
 
 .glitch-text {
-  font-size: clamp(24px, 5.5vw, 40px);
+  font-size: clamp(26px, 6vw, 42px);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #b40029;
+  color: #7a0c0c;
   text-align: center;
   opacity: 0;
   z-index: 30;
-  text-shadow: 0 0 12px rgba(180, 0, 41, 0.65), 0 0 28px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 0 16px rgba(97, 16, 16, 0.76), 0 0 32px rgba(0, 0, 0, 0.38);
 }
 
 .glitch-text.alert {
-  color: #fdf1eb;
-  text-shadow: 0 0 14px rgba(180, 0, 41, 0.78), 0 0 32px rgba(0, 0, 0, 0.48);
-  font-size: clamp(26px, 6vw, 44px);
+  color: #fdf0ed;
+  text-shadow: 0 0 18px rgba(180, 0, 41, 0.82), 0 0 36px rgba(0, 0, 0, 0.5);
+  font-size: clamp(28px, 6.5vw, 46px);
 }
 
 .glitch-text.active {

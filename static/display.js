@@ -13,6 +13,8 @@ let lastName = null;
 let claimInFlight = false;
 let ws;
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 joinUrlEl.textContent = joinUrl;
 
 // Render QR
@@ -42,45 +44,40 @@ function revealName(name) {
   claimInFlight = false;
 }
 
-function playGlitch(message, after, opts = {}) {
+function playGlitch(message, opts = {}) {
   const { duration = 2000, alert = false } = opts;
-  glitchText.textContent = message;
-  glitchOverlay.classList.add("active");
-  scanLines.classList.add("active");
-  if (alert) {
-    glitchOverlay.classList.add("alert");
-    scanLines.classList.add("alert");
-    glitchText.classList.add("alert");
-  }
-  glitchText.classList.add("active");
-  setTimeout(() => {
-    glitchOverlay.classList.remove("active");
-    scanLines.classList.remove("active");
-    glitchOverlay.classList.remove("alert");
-    scanLines.classList.remove("alert");
-    glitchText.classList.remove("alert");
-    glitchText.classList.remove("active");
-    if (after) after();
-  }, duration);
+  return new Promise((resolve) => {
+    glitchText.textContent = message;
+    glitchOverlay.classList.add("active");
+    scanLines.classList.add("active");
+    if (alert) {
+      glitchOverlay.classList.add("alert");
+      scanLines.classList.add("alert");
+      glitchText.classList.add("alert");
+    }
+    glitchText.classList.add("active");
+    setTimeout(() => {
+      glitchOverlay.classList.remove("active");
+      scanLines.classList.remove("active");
+      glitchOverlay.classList.remove("alert");
+      scanLines.classList.remove("alert");
+      glitchText.classList.remove("alert");
+      glitchText.classList.remove("active");
+      resolve();
+    }, duration);
+  });
 }
 
-function handleClaim(name) {
+async function handleClaim(name) {
   if (lastName === name || claimInFlight) return;
   claimInFlight = true;
-  playGlitch(
-    "COMMUNICATION INTERRUPTED",
-    () => {
-      // brief gap to ensure the second message is visible
-      setTimeout(() => {
-        playGlitch(
-          "TRAITORS TRAP ACTIVATED - LOCATION BROWNEDGE MAIN HALL",
-          () => revealName(name),
-          { alert: true, duration: 2600 }
-        );
-      }, 150);
-    },
-    { duration: 1800 }
-  );
+  await playGlitch("COMMUNICATION INTERRUPTED", { duration: 2200 });
+  await sleep(200);
+  await playGlitch("TRAITORS TRAP ACTIVATED - LOCATION BROWNEDGE MAIN HALL", {
+    alert: true,
+    duration: 3200,
+  });
+  revealName(name);
 }
 
 function handleReset() {

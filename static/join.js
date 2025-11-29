@@ -9,23 +9,35 @@ const heroBody = document.getElementById("hero-body");
 const glitchOverlay = document.getElementById("glitch-overlay");
 const scanLines = document.getElementById("scan-lines");
 const glitchText = document.getElementById("glitch-text");
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function setMessage(text, tone = "info") {
   messageEl.textContent = text;
   messageEl.dataset.tone = tone;
 }
 
-function playGlitch(message, after) {
-  glitchText.textContent = message;
-  glitchOverlay.classList.add("active");
-  scanLines.classList.add("active");
-  glitchText.classList.add("active");
-  setTimeout(() => {
-    glitchOverlay.classList.remove("active");
-    scanLines.classList.remove("active");
-    glitchText.classList.remove("active");
-    if (after) after();
-  }, 2000);
+function playGlitch(message, opts = {}) {
+  const { duration = 2000, alert = false } = opts;
+  return new Promise((resolve) => {
+    glitchText.textContent = message;
+    glitchOverlay.classList.add("active");
+    scanLines.classList.add("active");
+    if (alert) {
+      glitchOverlay.classList.add("alert");
+      scanLines.classList.add("alert");
+      glitchText.classList.add("alert");
+    }
+    glitchText.classList.add("active");
+    setTimeout(() => {
+      glitchOverlay.classList.remove("active");
+      scanLines.classList.remove("active");
+      glitchOverlay.classList.remove("alert");
+      scanLines.classList.remove("alert");
+      glitchText.classList.remove("alert");
+      glitchText.classList.remove("active");
+      resolve();
+    }, duration);
+  });
 }
 
 async function checkStatus() {
@@ -66,15 +78,20 @@ form.addEventListener("submit", async (e) => {
       throw new Error(data.detail || "Shield already claimed.");
     }
 
-    playGlitch("COMMUNICATION INTERRUPTED", () => {
-      heroHeadline.textContent = "Communication interrupted by the Traitors.";
-      heroBody.textContent = "";
-      form.classList.add("hidden");
-      paperName.textContent = name;
-      paperBody.innerHTML = `Dear ${name}<br/>By order of the Traitors you have been murdered<br/>Your eagerness to claim a shield has been your ultimate downfall`;
-      paper.classList.remove("hidden");
-      setMessage("");
+    await playGlitch("COMMUNICATION INTERRUPTED", { duration: 2200 });
+    await sleep(200);
+    await playGlitch("TRAITORS TRAP ACTIVATED - LOCATION BROWNEDGE MAIN HALL", {
+      alert: true,
+      duration: 3200,
     });
+
+    heroHeadline.textContent = "Communication interrupted by the Traitors.";
+    heroBody.textContent = "";
+    form.classList.add("hidden");
+    paperName.textContent = name;
+    paperBody.innerHTML = `Dear ${name}<br/>By order of the Traitors you have been murdered<br/>Your eagerness to claim a shield has been your ultimate downfall`;
+    paper.classList.remove("hidden");
+    setMessage("");
   } catch (err) {
     setMessage(err.message || "Unable to claim the shield.", "warn");
     nameInput.disabled = false;
