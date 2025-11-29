@@ -10,6 +10,7 @@ const heroCopy = document.getElementById("hero-copy");
 const posterBody = document.getElementById("poster-body");
 const resetBtn = document.getElementById("reset-hotspot");
 let lastName = null;
+let claimInFlight = false;
 let ws;
 
 joinUrlEl.textContent = joinUrl;
@@ -29,6 +30,7 @@ function setWaiting() {
   heroCopy.innerHTML = `Scan the code to seek protection.<br/>Only one shield exists.`;
   posterBody.classList.remove("hidden");
   lastName = null;
+  claimInFlight = false;
 }
 
 function revealName(name) {
@@ -37,6 +39,7 @@ function revealName(name) {
   heroCopy.textContent = "Communication interrupted by the Traitors.";
   posterBody.classList.add("hidden");
   lastName = name;
+  claimInFlight = false;
 }
 
 function playGlitch(message, after, opts = {}) {
@@ -62,7 +65,8 @@ function playGlitch(message, after, opts = {}) {
 }
 
 function handleClaim(name) {
-  if (lastName === name) return;
+  if (lastName === name || claimInFlight) return;
+  claimInFlight = true;
   playGlitch(
     "COMMUNICATION INTERRUPTED",
     () => {
@@ -94,6 +98,8 @@ function initSocket() {
       if (data.type === "status") {
         if (data.name && data.name !== lastName) {
           handleClaim(data.name);
+        } else if (!data.name && lastName) {
+          handleReset();
         }
       }
       if (data.type === "claimed") {
