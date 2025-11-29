@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Traitors Hall Display</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="shell poster-shell">
+      <div class="poster">
+        <div class="poster-top">
+        <div class="poster-crest">
+          <img src="/static/logo.png" alt="Traitors crest" class="crest-img" />
+          <span>Traitors</span>
+        </div>
+          <div class="poster-title">Shield Summons</div>
+          <div class="poster-sub" id="hero-copy">
+            Scan to claim the only shield. The Traitors are watching.
+          </div>
+        </div>
+
+        <div class="poster-body" id="poster-body">
+          <div class="poster-qr">
+            <div class="qr-box large" id="qr-code"></div>
+            <div class="qr-hint">
+              Aim your camera or visit<br />
+              <span id="join-url" class="muted"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="poster-seal"></div>
+      </div>
+
+      <div class="card hidden" id="death-panel" style="margin-top: 26px">
+        <div class="label">Fate sealed</div>
+        <div class="death-headline gothic">
+          <span id="death-name"></span> has been murdered by order of the Traitors for being too curious.
+        </div>
+      </div>
+    </div>
+
+    <div class="glitch-overlay" id="glitch-overlay"></div>
+    <div class="scan-lines" id="scan-lines"></div>
+    <div class="glitch-text" id="glitch-text"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="/static/display.js"></script>
+  </body>
+</html>
