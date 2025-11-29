@@ -35,6 +35,17 @@ class DisplayManager:
         for dead in dead_connections:
             self.disconnect(dead)
 
+    async def broadcast_reset(self) -> None:
+        message = {"type": "reset"}
+        dead_connections: Set[WebSocket] = set()
+        for display in self.displays:
+            try:
+                await display.send_json(message)
+            except Exception:
+                dead_connections.add(display)
+        for dead in dead_connections:
+            self.disconnect(dead)
+
     async def send_status(self, websocket: WebSocket, claimed_name: str | None) -> None:
         await websocket.send_json({"type": "status", "name": claimed_name})
 
@@ -73,6 +84,15 @@ async def claim_shield(payload: dict) -> JSONResponse:
     claimed_name = name
     await manager.broadcast_claim(name)
     return JSONResponse({"ok": True, "name": name})
+
+
+@app.post("/reset")
+async def reset_state() -> JSONResponse:
+    """Reset the claimed name (single-use state)."""
+    global claimed_name
+    claimed_name = None
+    await manager.broadcast_reset()
+    return JSONResponse({"ok": True})
 
 
 @app.websocket("/ws/display")

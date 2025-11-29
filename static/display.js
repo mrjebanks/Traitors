@@ -8,6 +8,7 @@ const scanLines = document.getElementById("scan-lines");
 const glitchText = document.getElementById("glitch-text");
 const heroCopy = document.getElementById("hero-copy");
 const posterBody = document.getElementById("poster-body");
+const resetBtn = document.getElementById("reset-btn");
 let lastName = null;
 let ws;
 
@@ -56,6 +57,11 @@ function handleClaim(name) {
   playGlitch("COMMUNICATION INTERRUPTED", () => revealName(name));
 }
 
+function handleReset() {
+  setWaiting();
+  playGlitch("SYSTEM RESET", null);
+}
+
 function initSocket() {
   const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
   ws = new WebSocket(`${wsProtocol}://${window.location.host}/ws/display`);
@@ -70,6 +76,9 @@ function initSocket() {
       }
       if (data.type === "claimed") {
         handleClaim(data.name);
+      }
+      if (data.type === "reset") {
+        handleReset();
       }
     } catch (err) {
       console.error("Bad message", err);
@@ -90,6 +99,8 @@ async function pollStatus() {
     const data = await res.json();
     if (data.name && data.name !== lastName) {
       handleClaim(data.name);
+    } else if (!data.name && lastName) {
+      handleReset();
     }
   } catch (err) {
     // ignore poll errors
@@ -97,3 +108,17 @@ async function pollStatus() {
 }
 
 setInterval(pollStatus, 2000);
+
+resetBtn?.addEventListener("click", async () => {
+  try {
+    resetBtn.disabled = true;
+    await fetch("/reset", { method: "POST" });
+    handleReset();
+  } catch (err) {
+    // ignore errors
+  } finally {
+    setTimeout(() => {
+      resetBtn.disabled = false;
+    }, 500);
+  }
+});

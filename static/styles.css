@@ -75,6 +75,7 @@ body::before {
 
 .poster-top {
   text-align: center;
+  position: relative;
 }
 
 .poster-crest {
@@ -105,6 +106,16 @@ body::before {
   color: #4c3d32;
   font-size: 18px;
   letter-spacing: 0.04em;
+}
+
+.reset-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 8px 12px;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  border-radius: 10px;
 }
 
 .poster-body {
