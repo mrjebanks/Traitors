@@ -109,13 +109,25 @@ body::before {
 }
 
 .reset-button {
+  display: none;
+}
+
+.reset-hotspot {
   position: absolute;
-  top: 0;
-  right: 0;
-  padding: 8px 12px;
-  font-size: 13px;
-  letter-spacing: 0.05em;
-  border-radius: 10px;
+  top: 8px;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  opacity: 0.08;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.reset-hotspot:focus-visible {
+  opacity: 0.5;
+  outline: 1px dashed #b8a692;
+  outline-offset: 2px;
 }
 
 .poster-body {

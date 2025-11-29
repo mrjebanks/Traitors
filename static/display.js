@@ -8,7 +8,7 @@ const scanLines = document.getElementById("scan-lines");
 const glitchText = document.getElementById("glitch-text");
 const heroCopy = document.getElementById("hero-copy");
 const posterBody = document.getElementById("poster-body");
-const resetBtn = document.getElementById("reset-btn");
+const resetBtn = document.getElementById("reset-hotspot");
 let lastName = null;
 let ws;
 
