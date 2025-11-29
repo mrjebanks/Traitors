@@ -63,13 +63,20 @@ function playGlitch(message, after, opts = {}) {
 
 function handleClaim(name) {
   if (lastName === name) return;
-  playGlitch("COMMUNICATION INTERRUPTED", () => {
-    playGlitch(
-      "TRAITORS TRAP ACTIVATED - LOCATION BROWNEDGE MAIN HALL",
-      () => revealName(name),
-      { alert: true, duration: 2200 }
-    );
-  }, { duration: 1800 });
+  playGlitch(
+    "COMMUNICATION INTERRUPTED",
+    () => {
+      // brief gap to ensure the second message is visible
+      setTimeout(() => {
+        playGlitch(
+          "TRAITORS TRAP ACTIVATED - LOCATION BROWNEDGE MAIN HALL",
+          () => revealName(name),
+          { alert: true, duration: 2600 }
+        );
+      }, 150);
+    },
+    { duration: 1800 }
+  );
 }
 
 function handleReset() {
